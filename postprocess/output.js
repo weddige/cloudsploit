@@ -84,6 +84,15 @@ module.exports = {
         var headers = ['category', 'title', 'description',
             'resource', 'region', 'statusWord', 'message'];
         if (settings.compliance) headers.push('compliance');
+        if (settings.detailed) {
+            headers.push('more info');
+            headers.push('recommended action');
+            headers.push('link');
+            headers.push('compliance_cis1');
+            headers.push('compliance_cis2');
+            headers.push('compliance_pci');
+            headers.push('compliance_hipaa');
+        }
         var csvWriter = require('csv-write-stream');
         var writer = csvWriter({headers: headers});
         writer.pipe(stream);
@@ -98,6 +107,16 @@ module.exports = {
                     exchangeStatusWord(result), commaSafe(result.message)];
                 
                 if (settings.compliance) toWrite.push(complianceMsg || '');
+                if (settings.detailed) {
+                    toWrite.push(commaSafe(plugin.more_info || ''));
+                    toWrite.push(commaSafe(plugin.recommended_action || ''));
+                    toWrite.push(commaSafe(plugin.link || ''));
+                    plugin_compliance = plugin.compliance || '';
+                    toWrite.push(commaSafe(plugin_compliance.cis1 || plugin_compliance.cis || ''));
+                    toWrite.push(commaSafe(plugin_compliance.cis2 || ''));
+                    toWrite.push(commaSafe(plugin_compliance.pci || ''));
+                    toWrite.push(commaSafe(plugin_compliance.hipaa || ''));
+                }
                 
                 this.writer.write(toWrite);
             },

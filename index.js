@@ -79,6 +79,10 @@ parser.add_argument('--run-asl', {
     help: 'When set, it will execute custom plugins.',
     action: 'store_false'
 });
+parser.add_argument('--detailed', {
+    help: 'CSV only. Writes a more detailed output.',
+    action: 'store_true'
+});
 
 let settings = parser.parse_args();
 let cloudConfig = {};
